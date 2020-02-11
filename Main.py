@@ -1,8 +1,6 @@
 import os
 from os.path import sep, exists
 
-import pandas as pd
-
 from Helper import Constants, Converter
 from Helper.Converter import convert_deap_to_csv
 from Helper.LoadSave import yield_data
@@ -32,17 +30,17 @@ def deap_to_csv(path):
         convert_deap_to_csv(filename, labels, Constants.LABEL_CHANNELS, 'label', Constants.SAVE_PATH_CUT_3)
 
 
-def freq_ext():
+def freq_ext(load_path, save_path, data_type, deap=False, epoc=False):
     theta_freq = [4, 8]
     alpha_freq = [8, 12]
     beta_freq = [12, 31]
     gamma_freq = [31, 50]
     sampling_rate = 128
     order = 7
-    for filename, file in yield_data(Constants.SAVE_PATH_RELEVANT_CHANNELS, "data", deap=True):
+    for filename, file in yield_data(load_path, data_type=data_type, deap=deap, epoc=epoc):
         new_trial = Converter.separate_freqs(file, theta_freq, alpha_freq, beta_freq, gamma_freq, sampling_rate, order)
         pf = filename.split(os.path.sep)[-2]
-        dp = Constants.SAVE_PATH_FREQ_EXT + os.path.sep + pf
+        dp = save_path + os.path.sep + pf
         if not exists(dp):
             os.makedirs(dp)
         fp = dp + sep + os.path.basename(filename)
@@ -66,14 +64,23 @@ if __name__ == '__main__':
     # relevant_channels()
 
     '''
-    3. Extract the frequencies for each trial () 
+    3. Extract the frequencies for each trial 
     '''
-    # freq_ext()
+    # freq_ext(Constants.SAVE_PATH_RELEVANT_CHANNELS,
+    #          Constants.SAVE_PATH_FREQ_EXT,
+    #          "data")
 
-    # new_epoc()
+    '''
+    4. Pre processing EPOC data:
+        - convert back from the unsigned 14-bit ADC
+        - High-(4Hz) and Low-Pass-Filter(45Hz)
+        - Extract only 60 sec (try to get 60 sec without peaks)
+    '''
+    # main("/home/mo7art/PycharmProjects/belfast_projekt_2019/epoc_data")
 
-    f = pd.read_csv("/home/mo7art/PycharmProjects/belfast_projekt_2019/epoc_data/P01/T1_2018.12.04_11.17.16.bp.csv",
-                    skiprows=1)
-    f = f.iloc[:, 1:-14]
-
-    f.to_csv("/home/mo7art/BrainHub/Converted/Epoc/T1_bp.csv", index=False, header=False)
+    '''
+    5. Extract the frequencies from EPOC data
+    '''
+    freq_ext("Converted" + sep + "Epoc" + sep + "4.Epoc_post_processing",
+             "Converted" + sep + "Epoc" + sep + "5.Epoc_Frequency_extraction",
+             "data")

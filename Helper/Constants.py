@@ -12,4 +12,4 @@ SAVE_PATH_CUT_3 = "Converted" + sep + "Deap" + sep + "1.Deap_data_cut_first_3_se
 SAVE_PATH_RELEVANT_CHANNELS = "Converted" + sep + "Deap" + sep + "2.Deap_data_relevant_channels"
 SAVE_PATH_FREQ_EXT = "Converted" + sep + "Deap" + sep + "3.Deap_data_channel_extraction"
 
-SAVE_PATH_RW_EPOC = ".." + sep + "Converted" + sep + "Epoc" + sep + "4.Epoc_post_processing"
+SAVE_PATH_RW_EPOC = "Converted" + sep + "Epoc" + sep + "4.Epoc_post_processing"
