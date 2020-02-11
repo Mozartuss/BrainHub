@@ -2,6 +2,7 @@ import os
 from os.path import sep, exists
 
 from Helper import Constants, Converter
+from Helper.CalcDescriptiveStatistics import run
 from Helper.Converter import convert_deap_to_csv
 from Helper.LoadSave import yield_data
 
@@ -81,6 +82,12 @@ if __name__ == '__main__':
     '''
     5. Extract the frequencies from EPOC data
     '''
-    freq_ext("Converted" + sep + "Epoc" + sep + "4.Epoc_post_processing",
-             "Converted" + sep + "Epoc" + sep + "5.Epoc_Frequency_extraction",
-             "data")
+    # freq_ext("Converted" + sep + "Epoc" + sep + "4.Epoc_post_processing",
+    #          "Converted" + sep + "Epoc" + sep + "5.Epoc_Frequency_extraction",
+    #          "data")
+
+    '''
+    6. Calculate statistically mean
+    '''
+
+    run("Converted/Epoc/5.Epoc_Frequency_extraction", "Converted/Epoc/6.Epoc_Data_Mean")
