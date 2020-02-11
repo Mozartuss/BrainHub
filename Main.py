@@ -2,8 +2,7 @@ import os
 from os.path import sep, exists
 
 from Helper import Constants, Converter
-from Helper.CalcDescriptiveStatistics import run
-from Helper.Converter import convert_deap_to_csv
+from Helper.Converter import convert_deap_to_csv, label_to_NNLabel
 from Helper.LoadSave import yield_data
 
 
@@ -90,4 +89,10 @@ if __name__ == '__main__':
     6. Calculate statistically mean
     '''
 
-    run("Converted/Epoc/5.Epoc_Frequency_extraction", "Converted/Epoc/6.Epoc_Data_Mean")
+    # run("Converted/Epoc/5.Epoc_Frequency_extraction", "Converted/Epoc/6.Epoc_Data_Mean")
+
+    '''
+    7. lables tzo NNLabels (1-4)
+    '''
+    label_to_NNLabel("Converted/Deap/1.Deap_data_cut_first_3_seconds_csv", "/Validation/arousal.csv", "arousal")
+    label_to_NNLabel("Converted/Deap/1.Deap_data_cut_first_3_seconds_csv", "/Validation/valence.csv", "valence")
