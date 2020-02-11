@@ -1,7 +1,6 @@
 from os import makedirs
 from os.path import sep, basename, exists
 
-import numpy
 import pandas as pd
 
 from Helper import Constants
@@ -16,7 +15,7 @@ def main(path):
         filtered_file = filter_epoc_file(file)
         '''cut first an last 10 sec '''
         filtered_file = filtered_file.iloc[1280:-1280, :].reset_index(drop=True)
-        s, e = trim_file(file)
+        s, e = trim_file(filtered_file, path)
         minute_file = filtered_file.iloc[s:e]
         participant = current_path.split(sep)[-2]
         f = basename(current_path).split("_")[0] + "_new"
@@ -25,10 +24,11 @@ def main(path):
             makedirs(dp)
         fp = dp + sep + f + ".csv"
         if not exists(fp):
-            filtered_file.to_csv(fp, index=False, header=False)
-            print("Save", fp)
+            minute_file.to_csv(fp, index=False, header=False)
+            print("Save", fp, len(minute_file))
         else:
             print("Check", fp)
+
 
 def filter_epoc_file(file):
     file = file.iloc[:, 2:16].sub(4200)  # <- EPOC data is converted from the unsigned 14-bit ADC
@@ -49,16 +49,16 @@ def get_first_last_index(file):
     return first_0_sample, last_128_sample + 1
 
 
-def trim_file(file):
+def trim_file(file, path):
     fl = []
     peak = []
     for col in file:
         co = file[col]
         cod = co.to_numpy()
-        peaks = [i for i in range(len(cod)) if cod[i] >= 650]
+        peaks = [i for i in range(len(cod)) if abs(cod[i]) >= 1000]
         peak.extend(peaks)
     di = {x: peak.count(x) for x in peak}
-    ch = list({k: v for k, v in sorted(di.items(), key=lambda item: item[1], reverse=True) if v > 7}.keys())
+    ch = list({k: v for k, v in sorted(di.items(), key=lambda item: item[1], reverse=True) if v > 10}.keys())
     ch.sort()
     for i in range(len(ch) - 1):
         if ch[i + 1] - ch[i] >= 128 * 60:
@@ -70,13 +70,17 @@ def trim_file(file):
             fl.append((ch[-1], len(file)))
     if fl:
         a, b = fl[0]
+        corl = b - a
+        a = corl - 128 * 30
+        b = corl + 128 * 30
+        print(basename(path) + ":", "Find peak free minute!")
     else:
         hl = int(len(file) / 2)
-        a = hl - 182 * 30
-        b = hl + 182 * 30
-        
+        a = hl - 128 * 30
+        b = hl + 128 * 30
+        print(basename(path) + ":", "Take the middle minute!")
     return a, b
 
 
 if __name__ == '__main__':
-    main("/home/mo7art/PycharmProjects/belfast_projekt_2019/epoc_data")
+    main("C:" + sep + "Users" + sep + "lukas.kleybolte" + sep + "Desktop" + sep + "EPOC")
