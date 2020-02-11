@@ -1,9 +1,10 @@
+import os
+
 import numpy
 import pandas as pd
-from scipy.signal import butter, lfilter
 
 from Helper.Filter import butter_bandpass_filter
-from Helper.LoadSave import save
+from Helper.LoadSave import save, yield_data
 
 
 def convert_deap_to_csv(filename, data, ids, data_type, dest_path, c_mode=None):
@@ -70,7 +71,27 @@ def separate_freqs(data, t, a, b, g, freq, order):
     return f_sol
 
 
+def label_to_NNLabel(load_path, save_path, t):
+    label_list = []
 
+    if t == "arousal":
+        for filename, file in yield_data(load_path, 'label'):
+            file.loc[(file.arousal >= 0) & (file.arousal < 2), 'arousal'] = 0  # Very LOW
+            file.loc[(file.arousal >= 2) & (file.arousal < 5), 'arousal'] = 1  # LOW
+            file.loc[(file.arousal >= 5) & (file.arousal < 8), 'arousal'] = 2  # HIGH
+            file.loc[(file.arousal >= 8) & (file.arousal <= 10), 'arousal'] = 3  # Very HIGH
 
+            label_list.append(int(file['arousal'][0]))
+    else:
+        for filename, file in yield_data(load_path, 'label'):
+            file.loc[(file.valence >= 0) & (file.valence < 2), 'valence'] = 0  # Very LOW
+            file.loc[(file.valence >= 2) & (file.valence < 5), 'valence'] = 1  # LOW
+            file.loc[(file.valence >= 5) & (file.valence < 8), 'valence'] = 2  # HIGH
+            file.loc[(file.valence >= 8) & (file.valence <= 10), 'valence'] = 3  # Very HIGH
 
+            label_list.append(int(file['valence'][0]))
 
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+    labels = pd.DataFrame(label_list)
+    labels.to_csv(save_path, index=False, header=False)
