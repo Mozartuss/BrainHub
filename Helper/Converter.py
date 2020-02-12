@@ -91,7 +91,7 @@ def label_to_NNLabel(load_path, save_path, t):
 
             label_list.append(int(file['valence'][0]))
 
-    if not os.path.exists(save_path):
-        os.makedirs(save_path)
+    if not os.path.exists(os.path.sep.join(save_path.split('/')[:-1])):
+        os.makedirs(os.path.sep.join(save_path.split('/')[:-1]))
     labels = pd.DataFrame(label_list)
     labels.to_csv(save_path, index=False, header=False)

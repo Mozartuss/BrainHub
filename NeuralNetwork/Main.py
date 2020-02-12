@@ -23,7 +23,7 @@ def load_checkpoint(filepath):
     return model
 
 
-def run(ta_data, tr_data, epochs=100, save_path='/net/arousal.pth', inputs=56):
+def run(ta_data, tr_data, epochs=100, save_path='arousal.pth', inputs=56):
     train_data_, test_data_, train_label_, test_label_ = train_test_split(tr_data, ta_data, test_size=0.3)
     train_set = CustomLoader(train_data_, test_data_, train_label_, test_label_, 'tr')
     test_set = CustomLoader(train_data_, test_data_, train_label_, test_label_, 'v')
@@ -42,6 +42,6 @@ def run(ta_data, tr_data, epochs=100, save_path='/net/arousal.pth', inputs=56):
 
 
 if __name__ == '__main__':
-    ta_data = pd.read_csv('Validation/arousal_4.csv', header=None)
-    tr_data = pd.read_csv('../Converted/Epoc/6.Epoc_Data_Mean/afd.csv', header=None)
+    ta_data = pd.read_csv('../Validation/arousal.csv', header=None)
+    tr_data = pd.read_csv('../Converted/Deap/6.Deap_Data_Mean/afd.csv', header=None)
     run(ta_data, tr_data)

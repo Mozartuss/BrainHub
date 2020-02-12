@@ -94,5 +94,5 @@ if __name__ == '__main__':
     '''
     7. lables tzo NNLabels (1-4)
     '''
-    label_to_NNLabel("Converted/Deap/1.Deap_data_cut_first_3_seconds_csv", "/Validation/arousal.csv", "arousal")
-    label_to_NNLabel("Converted/Deap/1.Deap_data_cut_first_3_seconds_csv", "/Validation/valence.csv", "valence")
+    label_to_NNLabel("Converted/Deap/1.Deap_data_cut_first_3_seconds_csv", "./Validation/arousal.csv", "arousal")
+    label_to_NNLabel("Converted/Deap/1.Deap_data_cut_first_3_seconds_csv", "./Validation/valence.csv", "valence")

@@ -217,7 +217,7 @@ def show(training_loss, testing_loss, val_accuracy, train_accuracy, lr=None):
         axs[2].annotate('{:.5f}'.format(lr[-1]), xy=(1, lr[-1]), xytext=(8, 0),
                         xycoords=('axes fraction', 'data'), textcoords='offset points', color='darkgrey')
         axs[2].legend(frameon=False)
-    plt.savefig('./net/arousal_fig.png', bbox_inches='tight')
+    plt.savefig('./arousal_fig.png', bbox_inches='tight')
     # plt.show()
     plt.close(fig)
 
